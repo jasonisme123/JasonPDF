@@ -1,0 +1,334 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="description" content="Responsive Bootstrap 4 and web Application ui kit.">
+<title>ChatPDF</title>
+<link rel="icon" type="image/png" href="./static/PDF.png">
+
+<link rel="stylesheet" href="./static/assets/fonts/material-icon/css/material-design-iconic-font.min.css">
+<link rel="stylesheet" href="./static/assets/vendor/bootstrap-datepicker/css/bootstrap-datepicker.min.css">
+<!-- 请勿在项目正式环境中引用该 layui.css 地址 -->
+<link rel="stylesheet" href="./static/assets/css/style.min.css">
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<link href="//unpkg.com/layui@2.8.2/dist/css/layui.css" rel="stylesheet">
+<style type="text/css">
+    * {
+        -WEBkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        user-select: auto;
+    }
+
+    pre {
+        word-wrap: break-word;
+        white-space: pre-wrap;
+    }
+</style>
+
+<body>
+    <div id="layout" class="theme-cyan">
+        <div class="main px-xl-5 px-lg-4 px-3">
+
+            <div class="chat-body">
+
+                <div class="chat-header border-bottom py-xl-4 py-md-3 py-2">
+                    <div class="container-xxl">
+                        <div class="row align-items-center">
+
+                            <div class="col-6 col-xl-4">
+                                <div class="media">
+                                    <div class="avatar me-3">
+                                        <div class="avatar rounded-circle no-image bg-primary text-light">
+                                            <span><i class="zmdi zmdi-comment-text"></i></span>
+                                        </div>
+                                    </div>
+                                    <div class="media-body overflow-hidden">
+                                        <div class="d-flex align-items-center mb-1">
+                                            <h6 class="text-truncate mb-0 me-auto">ChatPDF</h6>
+                                        </div>
+                                        <div class="text-truncate"><i class="zmdi zmdi-circle text-success"></i> Online
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-6 col-xl-8 text-end">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chat-content">
+                    <div class="container-xxl">
+                        <ul class="list-unstyled py-4">
+
+                            <li class="d-flex message">
+
+                                <div class="mr-lg-3 me-2">
+                                    <div
+                                        class="avatar sm rounded-circle bg-primary d-flex align-items-center justify-content-center">
+                                        <span><i class="zmdi zmdi-comment-text text-light"></i></span>
+                                    </div>
+                                </div>
+
+                                <div class="message-body">
+
+                                    <div class="message-row d-flex align-items-center">
+                                        <div class="p-3">
+                                            🤖欢迎使用!记得上传文件噢🤖<br>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </li>
+
+
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="chat-footer border-top py-xl-4 py-lg-2 py-2">
+                    <div class="container-xxl">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="input-group align-items-center">
+
+                                    <input id="message" type="text" class="form-control border-0 pl-0"
+                                        placeholder="Type your message...">
+
+                                    <div class="input-group-append">
+                                        <span class="input-group-text border-0">
+                                            <button class="btn btn-sm btn-link text-muted demo-class-accept"
+                                                data-toggle="tooltip" title="上传PDF" type="button" id="uploadPDF"><i
+                                                    class="zmdi zmdi-iridescent font-22"></i></button>
+                                        </span>
+                                    </div>
+                                    <div class="input-group-append">
+                                        <span class="input-group-text border-0 pr-0">
+                                            <button type="submit" class="btn btn-primary" onclick="send()">
+                                                <span class="d-none d-md-inline-block me-2">发送</span>
+                                                <i class="zmdi zmdi-mail-send"></i>
+                                            </button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="./static/assets/vendor/jquery/jquery-3.5.1.min.js"
+        type="5fcfc195457966e517c5483d-text/javascript"></script>
+    <script src="./static/assets/vendor/bootstrap/js/bootstrap.bundle.min.js"
+        type="5fcfc195457966e517c5483d-text/javascript"></script>
+
+    <script src="./static/assets/vendor/bootstrap-datepicker/js/bootstrap-datepicker.min.js"
+        type="5fcfc195457966e517c5483d-text/javascript"></script>
+
+    <script src="./static/assets/js/template.js" type="5fcfc195457966e517c5483d-text/javascript"></script>
+    <script src="https://ajax.cloudflare.com/cdn-cgi/scripts/7089c43e/cloudflare-static/rocket-loader.min.js"
+        data-cf-settings="5fcfc195457966e517c5483d-|49" defer=""></script>
+    <!-- 请勿在项目正式环境中引用该 layui.js 地址 -->
+    <script src="//unpkg.com/layui@2.8.2/dist/layui.js"></script>
+</body>
+<script>
+
+    function append_accordion(json_ref) {
+        const ulElement = document.querySelector('.list-unstyled.py-4');
+        const liElement = document.createElement('li');
+        liElement.classList.add('d-flex', 'message');
+
+        // 创建 li 标签内部的 HTML 元素
+        const div1Element = document.createElement('div');
+        div1Element.classList.add('mr-lg-3', 'me-2');
+
+        /*const avatarElement = document.createElement('div');
+        avatarElement.classList.add('avatar', 'sm', 'rounded-circle', 'bg-primary', 'd-flex', 'align-items-center', 'justify-content-center');
+        const spanElement = document.createElement('span');
+        const iElement = document.createElement('i');
+        iElement.classList.add('zmdi', 'zmdi-comment-text', 'text-light');
+        spanElement.appendChild(iElement);
+        avatarElement.appendChild(spanElement);
+        div1Element.appendChild(avatarElement);*/
+
+        const div2Element = document.createElement('div');
+        div2Element.classList.add('message-body');
+
+        const div3Element = document.createElement('div');
+        div3Element.classList.add('message-row', 'd-flex', 'align-items-center');
+
+
+        // 创建 layui-collapse 节点
+        const div4Element = document.createElement("div");
+        div4Element.classList.add("layui-collapse");
+        div4Element.setAttribute("lay-accordion", "");
+        // 创建第一组 layui-colla-item 节点
+        const collaItem1 = document.createElement("div");
+        collaItem1.classList.add("layui-colla-item");
+
+        const collaTitle1 = document.createElement("h2");
+        collaTitle1.classList.add("layui-colla-title");
+        collaTitle1.textContent = "引用第" + (parseInt(json_ref.page) + 1).toString() + '页';
+
+        const collaContent1 = document.createElement("div");
+        collaContent1.classList.add("layui-colla-content");
+        collaContent1.classList.add("layui-show");
+        collaContent1.textContent = json_ref.page_content;
+
+        collaItem1.appendChild(collaTitle1);
+        collaItem1.appendChild(collaContent1);
+
+        div4Element.appendChild(collaItem1)
+
+        //const div4Element = document.createElement('pre');
+        //div4Element.classList.add('p-3', 'message-content');
+        //div4Element.innerText = arr_ref;
+
+
+        div3Element.appendChild(div4Element);
+        div2Element.appendChild(div3Element);
+        liElement.appendChild(div1Element);
+        liElement.appendChild(div2Element);
+
+        // 将 li 标签添加到 ul 元素中
+        ulElement.appendChild(liElement);
+    }
+
+    function append_message(message) {
+        const ulElement = document.querySelector('.list-unstyled.py-4');
+        const liElement = document.createElement('li');
+        liElement.classList.add('d-flex', 'message');
+
+        // 创建 li 标签内部的 HTML 元素
+        const div1Element = document.createElement('div');
+        div1Element.classList.add('mr-lg-3', 'me-2');
+
+        const avatarElement = document.createElement('div');
+        avatarElement.classList.add('avatar', 'sm', 'rounded-circle', 'bg-primary', 'd-flex', 'align-items-center', 'justify-content-center');
+        const spanElement = document.createElement('span');
+        const iElement = document.createElement('i');
+        iElement.classList.add('zmdi', 'zmdi-comment-text', 'text-light');
+        spanElement.appendChild(iElement);
+        avatarElement.appendChild(spanElement);
+        div1Element.appendChild(avatarElement);
+
+        const div2Element = document.createElement('div');
+        div2Element.classList.add('message-body');
+
+        const div3Element = document.createElement('div');
+        div3Element.classList.add('message-row', 'd-flex', 'align-items-center');
+
+        const div4Element = document.createElement('pre');
+        //div4Element.classList.add('message-content', 'p-3');
+        div4Element.classList.add('p-3', 'message-content');
+        div4Element.innerText = message;
+        //div4Element.innerHTML = message;
+
+        div3Element.appendChild(div4Element);
+        div2Element.appendChild(div3Element);
+        liElement.appendChild(div1Element);
+        liElement.appendChild(div2Element);
+
+        // 将 li 标签添加到 ul 元素中
+        ulElement.appendChild(liElement);
+    }
+
+    function send() {
+        //获取文本框的值
+        var messageText = document.getElementById("message").value;
+        var messagePattern = /^\S+$/;
+        const ulElement = document.querySelector('.list-unstyled.py-4');
+        if (messagePattern.test(messageText)) {
+            //加入到到对话框
+            // 创建 li 标签
+            message = messageText;
+            const liElement = document.createElement('li');
+            liElement.classList.add('d-flex', 'message', 'left');
+
+            // 创建 li 标签内部的 HTML 元素
+            const div1Element = document.createElement('div');
+            div1Element.classList.add('mr-lg-3', 'me-2');
+
+            const div2Element = document.createElement('div');
+            div2Element.classList.add('message-body');
+
+            const div3Element = document.createElement('div');
+            div3Element.classList.add('message-row', 'd-flex', 'align-items-center');
+
+            const div4Element = document.createElement('div');
+            div4Element.classList.add('message-content', 'p-3');
+            div4Element.innerText = message;
+            // div4Element.innerHTML = message;
+            div3Element.appendChild(div4Element);
+            div2Element.appendChild(div3Element);
+            liElement.appendChild(div1Element);
+            liElement.appendChild(div2Element);
+
+            // 将 li 标签添加到 ul 元素中
+            ulElement.appendChild(liElement);
+            //发起请求，接收后端的数据
+            axios.get('/chat', {
+                params: {
+                    "question": message
+                }
+            })
+                .then(function (response) {
+                    if (response.data.status == 200) {
+                        message = response.data.answer;
+                        quote = response.data.quote;
+                        append_message(message)
+                        for (let k = 0; k < quote.length; k++) {
+                            append_accordion(quote[k])
+                        }
+
+                    }
+                })
+            //清空文本框
+            document.getElementById("message").value = ""
+        }
+    }
+
+    var input = document.getElementById("message");
+    input.addEventListener("keydown", function (event) {
+        // 如果按下的是回车键（keyCode为13），执行相应操作
+        if (event.keyCode === 13) {
+            send()
+        }
+    });
+
+
+    layui.use(function () {
+        var upload = layui.upload;
+        var layer = layui.layer;
+        var index = null
+        // 渲染
+        upload.render({
+            elem: '.demo-class-accept', // 绑定多个元素
+            url: '/upload', // 此处配置你自己的上传接口即可
+            accept: 'file', // 普通文件
+            exts: 'pdf',
+            done: function (res) {
+                layer.close(index);
+                layer.msg(res.status)
+            },
+            before: function (obj) { // obj 参数同 choose
+                index = layer.load(0, { shade: false });
+            }
+        });
+    });
+
+
+
+
+</script>
+
+</html>
